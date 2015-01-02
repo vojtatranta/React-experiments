@@ -1,0 +1,11 @@
+bower_components
+
+node_modules
+
+public/dist
+
+.DS_Store
+
+**/.DS_Store
+
+build
