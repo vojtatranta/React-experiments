@@ -44,7 +44,7 @@ gulp.task('default', function(cb)
     {
         gulp.start('less');
     });
-    gulp.watch(jsDir, function()
+    gulp.watch('./*', function()
     {
         gulp.start('scripts');
     });

@@ -11,17 +11,17 @@ var View = function(request, response)
 	this.title = '';
 }
 
-View.asView = function(request, response, klass)
+View.asView = function(request, response, klass, urlArgs)
 {
 	var view = new klass(request, response);
-	return view.dispatch(request, response);
+	return view.dispatch(request, response, urlArgs);
 }
 
-View.prototype.dispatch = function(request, response)
+View.prototype.dispatch = function(request, response, urlArgs)
 {
 	var method = request['method'].toLowerCase();
 	if (this[method])
-		return this[method](request, response);
+		return this[method].apply(this, [request, response].concat(urlArgs));
 
 	return this.httpNotAllowed(response);
 }
