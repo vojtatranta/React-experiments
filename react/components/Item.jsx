@@ -1,31 +1,17 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var request = require('superagent');
-var Layout = require('../layouts/Layout.jsx');
-var Base = require('../app.jsx');
-var request = require('superagent');
 
-var Item = React.createClass({
-
-	statics: {
-		templateBase: Base,
-		getTemplateBase: function()
-		{
-			return this.templateBase;
-		},
-	},
+var Item = module.exports = React.createClass({
 
 	render: function()
 	{
-		console.log(this.props);
 		return (
-			Layout(this.props,
-				<div className="item-wrap">
-					<h2>{this.props.item.title}</h2>
-					<div className="content">{this.props.item.content}</div>
-				</div>
-			)			
+			<div className="item-wrap">
+				<h2>{this.props.item.title}</h2>
+				<div className="content">{this.props.item.content}</div>
+			</div>
+			
 		)
 	},
 
@@ -37,5 +23,3 @@ var Item = React.createClass({
 	}
 
 });
-
-module.exports = Item;

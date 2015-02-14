@@ -21,7 +21,9 @@ ReactView.prototype.getTemplateData = function(extra)
 
 ReactView.prototype.renderReact = function(extraData)
 {
+
 	var tplData = this.getTemplateData(extraData);
+	return tplData;
 	if (this.request.accepts('json') && ! this.request.accepts('html'))
 	{
 		return this.response.json(tplData);

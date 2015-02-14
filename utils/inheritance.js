@@ -11,7 +11,7 @@ inheritance.inherits = function(child, parent) {
     child.prototype = new F();
     for (var k in parent)
     {
-    	child[k] = parent[k];
+        child[k] = parent[k];
     }
     child._superClass = parent.prototype;
 
@@ -27,7 +27,7 @@ module.exports = inheritance;
 
 /*
 * Calling
-* 
+*
 * inherits(Employee, Person);
 *
 */

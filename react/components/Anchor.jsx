@@ -2,26 +2,15 @@
 
 var React = require('react');
 var request = require('superagent');
+var Link = require('react-router').Link;
 
 
-var Anchor = React.createClass({
+var Anchor = module.exports = React.createClass({
     displayName: 'Anchor',
+
     render: function () {
         return (
-        	<a href={this.props.href} onClick={this.handleClick}>{this.props.children}</a>
+            <Link to={this.props.name} params={this.props.params} >{this.props.children}</Link> 
         );
     },
-
-    handleClick: function(e)
-    {
-		e.preventDefault();
-		var self = this,
-			href = this.props.href,
-			url = href.replace('#', '');
-
-		self.props.router.setRoute(href);
-		
-    },
 });
-
-module.exports = Anchor;

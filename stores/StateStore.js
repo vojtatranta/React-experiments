@@ -11,10 +11,10 @@ StateStore.history = {};
 
 StateStore.CHANGE_EVENT = 'change';
 
-StateStore.setInitialState = function(state)
+StateStore.setInitialState = function(path, state)
 {
 	StateStore.state = state;
-	StateStore.history[StateStore.router.getPath()] = state;
+	StateStore.history[path] = state;
 }
 
 StateStore.getCurrentState = function()
@@ -22,9 +22,8 @@ StateStore.getCurrentState = function()
 	return StateStore.state;
 }
 
-StateStore.getState = function(cb)
+StateStore.getState = function(path, cb)
 {
-	var path = StateStore.router.getPath();
 	if (typeof StateStore.history[path] !== 'undefined')
 		return cb(StateStore.history[path]);
 
@@ -32,8 +31,9 @@ StateStore.getState = function(cb)
 	{
 		if (err)
 			return alert(err.toString());
-		StateStore.updateState(StateStore.router.getPath(), res.body);
-		return cb(res.body);
+		var responseBody = JSON.parse(res.body);
+		StateStore.updateState(path, responseBody);
+		return cb(responseBody);
 	});
 }
 

@@ -1,10 +1,19 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var request = require('superagent');
 var Layout = require('../layouts/Layout.jsx');
+var Router = require('react-router')
 var Base = require('../app.jsx');
 var A = require('./Anchor.jsx');
+var ItemActions = require('../../actions/ItemActions');
+var ItemStore = require('../../stores/ItemStore');
+
+var getItemsState = function()
+{
+	return {
+		items: ItemStore.getAll(),
+	};
+}
 
 var ItemForm = React.createClass({
 
@@ -28,7 +37,7 @@ var ItemForm = React.createClass({
 	render: function()
 	{
 		return (
-			<form onSubmit={this.formSubmitted}>
+			<form onSubmit={this._handleSubmit}>
 				<div className="form-row form-group">
 					<input name="title" className="form-control" onChange={this.handleStateChange} />
 				</div>
@@ -42,10 +51,10 @@ var ItemForm = React.createClass({
 		);
 	},
 
-	formSubmitted: function(e)
+	_handleSubmit: function(e)
 	{
 		e.preventDefault();
-		this.props.formSubmitted(this.state);
+		ItemActions.add(this.state)
 		e.target.reset();
 	}
 
@@ -53,12 +62,15 @@ var ItemForm = React.createClass({
 
 
 var ItemLink = React.createClass({
+
     displayName: 'ItemLink',
+
     render: function () {
-    	var item = this.props.item;
-    	var url = '/item/' + item.id;
+		var item = this.props.item;
         return (
-            <div><A href={url} router={this.props.router}>{item.title}</A></div>
+            <div>
+            	<A name={this.props.name} params={{id: item.id}}><span>{item.title}</span></A>
+            </div>
         );
     }
 });
@@ -66,7 +78,7 @@ var ItemLink = React.createClass({
 module.exports = ItemLink;
 
 var List = React.createClass({
-	
+
 	statics: {
 		templateBase: Base,
 		getTemplateBase: function()
@@ -74,7 +86,6 @@ var List = React.createClass({
 			return this.templateBase;
 		},
 	},
-	
 
 	linkClicked: function(e)
 	{
@@ -85,7 +96,7 @@ var List = React.createClass({
 
 	getInitialState: function()
 	{
-		return this.props;
+		return getItemsState();
 	},
 
 	getDefaultProps: function()
@@ -95,25 +106,39 @@ var List = React.createClass({
 		}
 	},
 
+	componentDidMount: function()
+	{
+		ItemStore.addChangeListener(this._onChange);
+	},
+
+	componentWillUnmount: function()
+	{
+		ItemStore.removeChangeListener(this._onChange);
+	},
+
+	_onChange: function()
+	{
+		this.setState(getItemsState());
+	},
+
 	render: function()
 	{
 		var self = this;
 
+
 		return (
-			Layout(this.props,
-				<div className="list-form">
-					<ItemForm formSubmitted={this.handleFormSubmit} />
-					<div className="items">
-					{this.props.items.map(function(item) {			
-						return (
-							<div className="wrapit">
-								<ItemLink item={item} router={self.props.router} /> 
-							</div>
-						);
-					})}
-					</div>
+			<div className="list-form">
+				<ItemForm formSubmitted={this.handleFormSubmit} />
+				<div className="items">
+				{this.state.items.map(function(item) {
+					return (
+						<div className="wrapit">
+							<ItemLink item={item} name='item' />
+						</div>
+					);
+				})}
 				</div>
-			)
+			</div>
 		);
 	},
 
@@ -126,11 +151,6 @@ var List = React.createClass({
 		items.push(formState);
 		this.setState({
 			items: items
-		});
-
-		request.post('/').send(formState).end(function(err, response)
-		{
-
 		});
 
 	}

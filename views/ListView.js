@@ -2,16 +2,7 @@ var React = require('react');
 var ReactView = require('./ReactView');
 var List = require('../react/components/List.jsx');
 var inheritance = require('../utils/inheritance');
-
-var extras = {
-	items: [
-		{
-			'id': 1,
-			'title': 'AHoj, tohle je můj post, který se vypisuje Reactem',
-			'content': 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.'
-		},
-	]
-}
+var data = require('../data');
 
 var ListView = function(request, response)
 {
@@ -25,13 +16,16 @@ inheritance.inherits(ListView, ReactView);
 ListView.prototype.get = function(request, response)
 {
 	
-	this.renderReact(extras);
+	return this.renderReact(data);
 }
 
 ListView.prototype.post = function(request, response)
 {
-	extras.items.push(request.body);
-	response.send('ok');
+	var item = request.body;
+	item['id'] = data.items.length + 1;
+	data.items.push(item);
+
+	this.renderReact(item);
 }
 
 

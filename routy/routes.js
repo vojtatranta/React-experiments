@@ -1,17 +1,15 @@
-var List = require('../react/components/List.jsx');
-var Item = require('../react/components/Item.jsx');
-
 var routes = {};
 
 routes.home = {
 	path: '/',
-	template: List
 }
 
+routes.list = {
+	path: '/',
+}
 
 routes.item = {
 	path: '/item/:id',
-	template: Item
 };
 
 routes.getRoute = function(route)
@@ -20,6 +18,16 @@ routes.getRoute = function(route)
 	{
 		if (route == routes[routeName].path) return routes[routeName];
 	}
+	return false;
+}
+
+routes.getRouteByName = function(name)
+{
+	for(var routeName in routes)
+	{
+		if (name == routeName) return routes[routeName];
+	}
+
 	return false;
 }
 

@@ -4,7 +4,6 @@
   "description": "My experimental React SPA, isomorphic app",
   "main": "index.js",
   "dependencies": {
-    "director": "^1.2.7",
     "body-parser": "^1.10.0",
     "express-json": "^1.0.0",
     "gulp": "^3.8.10",
