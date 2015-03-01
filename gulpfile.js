@@ -6,6 +6,8 @@ var uglify = require('gulp-uglify');
 var gutil = require('gulp-util');
 var less = require('gulp-less');
 
+var babelify = require("babelify");
+
 var jsDir = './client/js/**/*',
 	jsDist = './public/dist/js',
 
@@ -17,6 +19,7 @@ gulp.task('less', function()
 {
     gulp.src(lessMain)
     .pipe(less())
+		.on('error', function(){})
     .pipe(gulp.dest(lessDist));
 });
 
@@ -27,13 +30,15 @@ gulp.task('scripts', function()
 	.pipe(browserify({
 		insertGlobals: true,
 		transform: [
-            ["reactify", {"es6": true}]
+            ["reactify", {"es6": true}],
+            ['babelify']
         ],
 	}))
-    .on('error', gutil.log)
     //.pipe(uglify())
+	  .on('error', gutil.log)
 	.pipe(gulp.dest(jsDist))
 });
+
 
 gulp.task('default', function(cb)
 {

@@ -1,59 +1,59 @@
-var request = require('superagent');
+var BaseStore = require('./BaseStore');
+var inheritance = require('../utils/inheritance');
+var Dispatcher = require('../dispatcher/Dispatcher');
 
-
-var StateStore = {};
-
-StateStore.state = {};
-
-StateStore.router = null;
-
-StateStore.history = {};
-
-StateStore.CHANGE_EVENT = 'change';
-
-StateStore.setInitialState = function(path, state)
+var self = null;
+var StateStore = function()
 {
-	StateStore.state = state;
-	StateStore.history[path] = state;
+	self = this;
+
+	self._state = null;
+	self._handler = null;
+
+	self._id = Math.random();
+
+	self.dispatchToken = Dispatcher.register(this._register);
+}
+inheritance.inherits(StateStore, BaseStore);
+
+StateStore.prototype.getState = function()
+{
+	return self._state;
 }
 
-StateStore.getCurrentState = function()
+StateStore.prototype.getHandler = function()
 {
-	return StateStore.state;
+	return self._handler;
 }
 
-StateStore.getState = function(path, cb)
+StateStore.prototype._setInitialState = function(state)
 {
-	if (typeof StateStore.history[path] !== 'undefined')
-		return cb(StateStore.history[path]);
+	if (self._state !== null)
+		throw Error('Cannot set initial state twice!');
 
-	request.get(path).set('Accept', 'application/json').end(function(err, res)
-	{
-		if (err)
-			return alert(err.toString());
-		var responseBody = JSON.parse(res.body);
-		StateStore.updateState(path, responseBody);
-		return cb(responseBody);
-	});
+	self._state = state.state;
+	self._handler = state.handler;
+	return self.emitChange();
 }
 
-StateStore.updateState = function(path, state)
+StateStore.prototype._update = function(state)
 {
-	StateStore.state = state;
-
-	StateStore.history[path] = state;
-
-	StateStore.dispatch(StateStore.CHANGE_EVENT, StateStore.state);
+	self._state = state.state;
+	self._handler = state.handler;
+	return self.emitChange();
 }
 
-StateStore.setRouter = function(router)
+StateStore.prototype._register = function(payload)
 {
-	StateStore.router = router;
-}
-
-StateStore.dispatch = function(evType, payload)
-{
-	
+	var action = payload.action;
+	switch(action.actionType) {
+		case 'SET_INITIAL_STATE':
+			self._setInitialState(action.state);
+			break;
+		case 'NAVIGATE':
+			self._update(action.state);
+		break;
+	}
 }
 
 module.exports = StateStore;

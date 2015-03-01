@@ -1,6 +1,6 @@
 var helpers = {};
 
-helpers.merge = function(obj1, obj2)
+helpers.merge = (obj1, obj2) =>
 {
 	for(var k in obj2)
 	{
@@ -8,6 +8,15 @@ helpers.merge = function(obj1, obj2)
 	}
 
 	return obj1;
-}
+};
+
+helpers.compact = () =>
+{
+    var obj = {};
+    Array.prototype.forEach.call(arguments, (elem) => {
+        obj[elem] = window[elem];
+    });
+    return obj;
+};
 
 module.exports = helpers;

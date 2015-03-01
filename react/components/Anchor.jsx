@@ -10,7 +10,7 @@ var Anchor = module.exports = React.createClass({
 
     render: function () {
         return (
-            <Link to={this.props.name} params={this.props.params} >{this.props.children}</Link> 
+
         );
     },
 });

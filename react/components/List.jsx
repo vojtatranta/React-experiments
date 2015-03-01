@@ -1,19 +1,12 @@
-/** @jsx React.DOM */
 
 var React = require('react');
 var Layout = require('../layouts/Layout.jsx');
 var Router = require('react-router')
 var Base = require('../app.jsx');
-var A = require('./Anchor.jsx');
+var Link = React.createFactory(require('react-router').Link);
 var ItemActions = require('../../actions/ItemActions');
-var ItemStore = require('../../stores/ItemStore');
 
-var getItemsState = function()
-{
-	return {
-		items: ItemStore.getAll(),
-	};
-}
+var ItemStore = require('../../stores/ItemStore');
 
 var ItemForm = React.createClass({
 
@@ -61,7 +54,7 @@ var ItemForm = React.createClass({
 });
 
 
-var ItemLink = React.createClass({
+var ItemLink = React.createFactory(React.createClass({
 
     displayName: 'ItemLink',
 
@@ -69,22 +62,19 @@ var ItemLink = React.createClass({
 		var item = this.props.item;
         return (
             <div>
-            	<A name={this.props.name} params={{id: item.id}}><span>{item.title}</span></A>
+							<Link to={this.props.name} params={{id: item.id}}>
+								<span>{item.title}</span>
+							</Link>
             </div>
         );
     }
-});
+}));
 
-module.exports = ItemLink;
 
 var List = React.createClass({
 
 	statics: {
-		templateBase: Base,
-		getTemplateBase: function()
-		{
-			return this.templateBase;
-		},
+		store: ItemStore,
 	},
 
 	linkClicked: function(e)
@@ -96,7 +86,7 @@ var List = React.createClass({
 
 	getInitialState: function()
 	{
-		return getItemsState();
+		return {items: List.store.getAll()};
 	},
 
 	getDefaultProps: function()
@@ -108,27 +98,23 @@ var List = React.createClass({
 
 	componentDidMount: function()
 	{
-		ItemStore.addChangeListener(this._onChange);
+		List.store.addChangeListener(this._onChange);
 	},
 
 	componentWillUnmount: function()
 	{
-		ItemStore.removeChangeListener(this._onChange);
+		List.store.removeChangeListener(this._onChange);
 	},
 
 	_onChange: function()
 	{
-		this.setState(getItemsState());
+		List.store.getAll();
 	},
 
 	render: function()
 	{
-		var self = this;
-
-
 		return (
 			<div className="list-form">
-				<ItemForm formSubmitted={this.handleFormSubmit} />
 				<div className="items">
 				{this.state.items.map(function(item) {
 					return (
@@ -142,10 +128,8 @@ var List = React.createClass({
 		);
 	},
 
-
 	handleFormSubmit: function(formState)
 	{
-
 		var items = this.state.items;
 		formState['id'] = items.length;
 		items.push(formState);
@@ -154,8 +138,6 @@ var List = React.createClass({
 		});
 
 	}
-
-
 });
 
 module.exports = List;

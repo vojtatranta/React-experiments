@@ -1,28 +1,36 @@
 {
-  "name": "React-experiments",
-  "version": "0.0.1",
-  "description": "My experimental React SPA, isomorphic app",
-  "main": "index.js",
+  "name": "React-sexperiments",
+  "version": "0.0.2",
+  "description": "An experimental React SPA, isomorphic app.",
+  "main": "server.js",
   "dependencies": {
-    "body-parser": "^1.10.0",
-    "express-json": "^1.0.0",
-    "gulp": "^3.8.10",
-    "gulp-less": "^2.0.1",
-    "express": "^4.10.6",
-    "gulp-browserify": "^0.5.0",
-    "gulp-watch": "^3.0.0",
-    "gulp-util": "^3.0.1",
-    "gulp-uglify": "^1.0.2",
-    "gzippo": "^0.2.0",
-    "node-jsx": "^0.2.1",
-    "react": "^0.12.2",
-    "superagent": "^0.21.0",
-    "reactify": "^0.17.1",
-    "gulp-supervisor": "^0.1.2"
+    "body-parser": "*",
+    "express": "*",
+    "express-json": "*",
+    "gulp": "*",
+    "gulp-browserify": "*",
+    "gulp-less": "*",
+    "gulp-uglify": "*",
+    "gulp-util": "*",
+    "gulp-watch": "*",
+    "gzippo": "*",
+    "node-jsx": "*",
+    "pg": "*",
+    "react": "*",
+    "reactify": "*",
+    "superagent": "*",
+    "babel": "*",
+    "react-router": "*",
+    "flux": "*",
+    "when": "*",
+    "orm": "*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babelify": "^5.0.3"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "supervisor node --harmony server.js"
   },
   "repository": {
     "type": "git",
